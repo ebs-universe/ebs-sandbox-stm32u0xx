@@ -1,0 +1,7 @@
+.pio
+.vscode
+*.output
+*.log
+__pycache__
+*.pyc
+*.piopm
