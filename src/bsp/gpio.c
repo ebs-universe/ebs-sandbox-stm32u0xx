@@ -34,10 +34,5 @@ void application_gpio_init (void){
     gpio_init();
     gpio_init_board_leds();
     gpio_init_board_buttons();
-    #if APP_ENABLE_BCIF
     gpio_init_bcif();
-    #endif
-    #if APP_ENABLE_PRIF
-    gpio_init_prif();
-    #endif
 }
