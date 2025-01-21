@@ -1,19 +1,24 @@
 
 
+#include <string.h>
 #include <application.h>
 #include <irq_handlers.h>
 #include <iomap.h>
+#include <hal/uc.h>
 
 #include "bsp/gpio.h"
-#include <blink.h>
 
-#include "ebs/time_if.h"
 #include <ucdm/ucdm.h>
-
-#include <hal/uc.h>
+#include "ebs/time_if.h"
+#include <time/time.h>
+#include <time/cron.h>
 #include <modbus/modbus.h>
 
-ucdm_addr_t ucdm_address;
+#include <blink.h>
+
+#include <demos/uart_demo.h>
+
+ucdm_addr_t next_address;
 
 static void setup_handlers(void) {
     __core_handler_inclusion = 1;
@@ -41,10 +46,10 @@ static ucdm_addr_t setup_core(ucdm_addr_t ucdm_address) {
 static ucdm_addr_t setup_peripherals(ucdm_addr_t ucdm_address) {
     application_gpio_init();
     
-    #if APP_ENABLE_ID == 1 
+    #if APP_ENABLE_ID 
         id_init();
     #endif
-    #if APP_ENABLE_ENTROPY == 1 
+    #if APP_ENABLE_ENTROPY
         entropy_init();
     #endif
     #if APP_ENABLE_EEPROM
@@ -56,9 +61,20 @@ static ucdm_addr_t setup_peripherals(ucdm_addr_t ucdm_address) {
     #if APP_ENABLE_RTC
         rtc_init();
     #endif
+    #if APP_ENABLE_TIME_SYNC
+        setup_time_sync();
+    #endif
+    #if APP_ENABLE_OUTPUT_BLINK
+        start_blink_task();
+    #endif
     #if APP_ENABLE_BCIF
         #if APP_BCIF_TYPE == 0
             uart_init(APP_BCIF_INTFNUM);
+        #endif
+    #endif
+    #if APP_ENABLE_PRIF
+        #if APP_PRIF_TYPE == 0
+            uart_init(APP_PRIF_INTFNUM);
         #endif
     #endif
     
@@ -68,13 +84,6 @@ static ucdm_addr_t setup_peripherals(ucdm_addr_t ucdm_address) {
     return ucdm_address;
 }
 
-static void setup_time_sync(void) {
-    #if APP_ENABLE_RTC
-        tm_sync_current_from_rtc();
-    #endif
-    tm_sync_request_host();
-}
-
 ucdm_addr_t setup_system(ucdm_addr_t ucdm_address) {
     ucdm_address = setup_core(ucdm_address);
     ucdm_address = setup_peripherals(ucdm_address);
@@ -82,12 +91,8 @@ ucdm_addr_t setup_system(ucdm_addr_t ucdm_address) {
 }
 
 ucdm_addr_t setup_application(ucdm_addr_t ucdm_address) {
-    setup_time_sync();
-    #if APP_ENABLE_BLINK
-    start_blink_task();
-    #endif
     #if APP_ENABLE_MODBUS
-    ucdm_address = modbus_init(ucdm_address, MODBUS_DEFAULT_DEVICE_ADDRESS);
+        ucdm_address = modbus_init(ucdm_address, MODBUS_DEFAULT_DEVICE_ADDRESS);
     #endif
     return ucdm_address;
 }
@@ -99,6 +104,8 @@ int main(void) {
     ucdm_address = setup_system(ucdm_address);
     ucdm_address = setup_application(ucdm_address);
     
+    start_uart_demo();
+
     while (1)
     {
         #if APP_ENABLE_TIME_CRON
