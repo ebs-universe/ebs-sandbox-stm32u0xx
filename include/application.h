@@ -12,12 +12,34 @@
 #define APP_ENABLE_LIBVERSION_DESCRIPTORS   1
 
 /**
+ * @name Application Descriptors Configuration
+ * 
+ * Various descriptrs used to identify the application. For USB enumeration, 
+ * the following descriptors must be minimally specified : 
+ * 
+ *  - APP_DESCRIPTOR_VENDOR_NAME : USB Device Manufacturer
+ *  - APP_DESCRIPTOR_HARDWARE_NAME : USB Product Name
+ * 
+ */
+/**@{*/
+#define APP_DESCRIPTOR_VENDOR_NAME          "EBS Development"
+#define APP_DESCRIPTOR_VENDOR_URL           "https://github.com/ebs-universe"
+
+#define APP_DESCRIPTOR_HARDWARE_NAME        "Nucleo STM32U083RC"
+#define APP_DESCRIPTOR_HARDWARE_REVISION    "B01"
+#define APP_DESCRIPTOR_HARDWARE_VARIANT     ""    
+
+#define APP_DESCRIPTOR_FIRMWARE_NAME        "EBS Platform Development Stack"
+#define APP_DESCRIPTOR_FIRMWARE_REVISION    "9.9.9"
+/**@}*/
+
+
+/**
  * @name Application GPIO Configuration
  */
 /**@{*/   
     #define APP_ENABLE_GPIO            1
 /**@}*/ 
-
 
 /**
  * @name Application Systick and Time Configuration
@@ -27,8 +49,8 @@
     #define APP_USE_CORE_SYSTICK       1
     #define APP_ENABLE_TIME_CRON       1
     #define APP_ENABLE_TIME_SYNC       1
-    #define APP_ENABLE_RTC             1
-    #define APP_ENABLE_RTC_1HZ_OUT     1
+    #define APP_ENABLE_RTC             0
+    #define APP_ENABLE_RTC_1HZ_OUT     0
 /**@}*/ 
 
 /**
@@ -61,39 +83,121 @@
  */
 /**@{*/   
     #define APP_ENABLE_UART             1
-
-    #define APP_ENABLE_UART1            0
     #define APP_ENABLE_UART2            1    
-    #define APP_ENABLE_UART3            0
-    #define APP_ENABLE_UART4            0
-    #define APP_ENABLE_UART5            0
-    #define APP_ENABLE_UART6            0
-    #define APP_ENABLE_UART7            0
     
-    #define APP_ENABLE_UART2_PT         1
-    #define uC_UART2_PT_INFNUM          0
-    #define uC_UART2_INTFNUM            0
     #define uC_UART2_BAUD               1000000
-    #define uC_UART2_TXBUF_LEN          255
-    #define uC_UART2_RXBUF_LEN          255
 /**@}*/ 
+
+// /**
+//  * @name Application USB Configuration
+//  */
+// /**@{*/    
+//     #define APP_ENABLE_USB_HOST             0   // Not implemented.
+//     #define APP_ENABLE_USB_DEVICE           1
+//     #define APP_ENABLE_USB                  (APP_ENABLE_USB_DEVICE | APP_ENABLE_USB_HOST)
+//     #define APP_USB_DEVICE_RHPORT           0
+//     #define APP_USB_DESCR_VID               1155
+//     #define APP_USB_DESCR_PID               22336
+//     #define APP_USB_DESCR_VERSION           0x0100
+//     #define APP_USB_DESCR_MANUFACTURER      "EBS Development"
+//     #define APP_USB_DESCR_PRODUCT           "STM32F4 Development Sandbox"
+//     #define APP_USB_DESCR_IF_CDC            "TinyUSB CDC"
+//     #define APP_USB_POWER                   400
+//     #define APP_USBCDC_IFACES               1
+//     #define APP_USBCDC_IFACE                0
+//     #define APP_BLINK_FOR_USB_STATUS        1
+// /**@}*/ 
 
 /**
  * @name Application Primary Interface Configuration
  */
 /**@{*/   
-    #define APP_ENABLE_PRIF             0
-    #define APP_PRIF_TYPE               0
+    #define APP_ENABLE_PRIF             1
+    #define APP_PRIF_TYPE               EBS_INTF_UART
     #define APP_PRIF_INTFNUM            0
+/**@}*/ 
+
+/**
+ * @name Application Bulk Interface Configuration
+ */
+/**@{*/   
+    #define APP_ENABLE_BULKIF           0
+    #define APP_BULKIF_TYPE             EBS_INTF_UART
+    #define APP_BULKIF_INTFNUM          0
 /**@}*/ 
 
 /**
  * @name Application Backchannel Interface Configuration
  */
 /**@{*/   
-    #define APP_ENABLE_BCIF             1
-    #define APP_BCIF_TYPE               0
+    #define APP_ENABLE_BCIF             0
+    #define APP_BCIF_TYPE               EBS_INTF_UART
     #define APP_BCIF_INTFNUM            0
+/**@}*/ 
+
+
+/**
+ * @name Application Common Infrastructure Configuration
+ */
+/**@{*/   
+    #define APP_ENABLE_OUTPUT_BLINK     1
+    #define BLINK_GPIO                  GPIO_LED1
+    #define BLINK_POLARITY              1
+
+    #define APP_ENABLE_OUTPUT_ERROR     0
+    #define ERROR_GPIO                  GPIO_LED_RED
+    #define ERROR_POLARITY              1
+/**@}*/
+
+/**
+ * @name Application Debug Configuration
+ */
+/**@{*/   
+    #define APP_ENABLE_DEBUG                 1
+
+    #if APP_ENABLE_BCIF
+        #define DEBUG_TRANSPORT_INTFNUM      APP_BCIF_INTFNUM
+        #define DEBUG_TRANSPORT_TYPE         APP_BCIF_TYPE
+    #elif APP_ENABLE_PRIF
+        #define DEBUG_TRANSPORT_INTFNUM      APP_PRIF_INTFNUM
+        #define DEBUG_TRANSPORT_TYPE         APP_PRIF_TYPE      
+    #endif
+/**@}*/
+
+/**
+ * @name Application Modbus Configuration
+ */
+/**@{*/   
+    #define APP_ENABLE_MODBUS                0
+    
+    #if APP_ENABLE_PRIF
+        #define MODBUS_TRANSPORT_INTFNUM     APP_PRIF_INTFNUM
+        #define MODBUS_TRANSPORT_TYPE        APP_PRIF_TYPE
+    #elif APP_ENABLE_BCIF
+        #define MODBUS_TRANSPORT_INTFNUM     APP_BCIF_INTFNUM
+        #define MODBUS_TRANSPORT_TYPE        APP_BCIF_TYPE
+    #endif
+
+    #define MODBUS_PLUGGABLE_TRANSPORTS      0
+    #define MODBUS_DEFAULT_DEVICE_ADDRESS    0x05
+/**@}*/
+
+/**
+ * @name Application Testing Configuration
+ */
+/**@{*/   
+    #ifndef TEST_SERIAL_INTFNUM
+        #if APP_ENABLE_PRIF
+        #define TEST_SERIAL_INTFNUM           APP_PRIF_INTFNUM
+        #define TEST_SERIAL_TYPE              APP_PRIF_TYPE
+        #elif APP_ENABLE_BCIF
+        #define TEST_SERIAL_INTFNUM           APP_BCIF_INTFNUM
+        #define TEST_SERIAL_TYPE              APP_BCIF_TYPE
+        #endif
+    #endif
+    #ifndef TEST_SERIAL_TYPE
+    #define TEST_SERIAL_TYPE                  0
+    #endif
 /**@}*/ 
 
 #define DLMS_INVOCATION_COUNTER     0x00000000
@@ -136,67 +240,5 @@
     #define APP_CRYPTO_MODE             CRYPTO_CTX_MODE_ENCRYPTION
 /**@}*/
 
-// /**
-//  * @name Application USB Configuration
-//  */
-// /**@{*/    
-//     #define APP_ENABLE_USB_HOST             0   // Not implemented.
-//     #define APP_ENABLE_USB_DEVICE           1
-//     #define APP_ENABLE_USB                  (APP_ENABLE_USB_DEVICE | APP_ENABLE_USB_HOST)
-//     #define APP_USB_DEVICE_RHPORT           0
-//     #define APP_USB_DESCR_VID               1155
-//     #define APP_USB_DESCR_PID               22336
-//     #define APP_USB_DESCR_VERSION           0x0100
-//     #define APP_USB_DESCR_MANUFACTURER      "EBS Development"
-//     #define APP_USB_DESCR_PRODUCT           "STM32F4 Development Sandbox"
-//     #define APP_USB_DESCR_IF_CDC            "TinyUSB CDC"
-//     #define APP_USB_POWER                   400
-//     #define APP_USBCDC_IFACES               1
-//     #define APP_USBCDC_IFACE                0
-//     #define APP_BLINK_FOR_USB_STATUS        1
-// /**@}*/ 
-
-/**
- * @name Application Common Infrastructure Configuration
- */
-/**@{*/   
-    #define APP_ENABLE_BLINK                 1
-/**@}*/
-
-/**
- * @name Application Modbus Configuration
- */
-/**@{*/   
-    #define APP_ENABLE_MODBUS                1
-    
-    #if APP_ENABLE_PRIF
-        #define MODBUS_TRANSPORT_INTFNUM     APP_PRIF_INTFNUM
-        #define MODBUS_TRANSPORT_TYPE        APP_PRIF_TYPE
-    #elif APP_ENABLE_BCIF
-        #define MODBUS_TRANSPORT_INTFNUM     APP_BCIF_INTFNUM
-        #define MODBUS_TRANSPORT_TYPE        APP_BCIF_TYPE
-    #endif
-
-    #define MODBUS_PLUGGABLE_TRANSPORTS      0
-    #define MODBUS_DEFAULT_DEVICE_ADDRESS    0x05
-/**@}*/
-
-/**
- * @name Application Testing Configuration
- */
-/**@{*/   
-    #ifndef TEST_SERIAL_INTFNUM
-        #if APP_ENABLE_PRIF
-        #define TEST_SERIAL_INTFNUM           APP_PRIF_INTFNUM
-        #define TEST_SERIAL_TYPE              APP_PRIF_TYPE
-        #elif APP_ENABLE_BCIF
-        #define TEST_SERIAL_INTFNUM           APP_BCIF_INTFNUM
-        #define TEST_SERIAL_TYPE              APP_BCIF_TYPE
-        #endif
-    #endif
-    #ifndef TEST_SERIAL_TYPE
-    #define TEST_SERIAL_TYPE                  0
-    #endif
-/**@}*/ 
 
 #endif

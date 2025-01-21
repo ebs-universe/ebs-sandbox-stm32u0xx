@@ -27,6 +27,9 @@ extern "C" {
 #endif
 
 #include "stm32u0xx_hal.h"
+#include "clocktree.h"
+#include "memmap.h"
+#include "priorities.h"
 
 /**
  * @name GPIOs for User Buttons
@@ -44,8 +47,6 @@ extern "C" {
 #define LED1_PIN            5   
 #define LED1_PORT           GPIOA_BASE
 #define GPIO_LED1           LED1_PORT, LED1_PIN 
-
-#define BLINK_GPIO          GPIO_LED1
 /**@}*/ 
 
 /**
@@ -129,6 +130,20 @@ extern "C" {
 #define RTC_1HZ_OUT_PIN     2
 #define RTC_1HZ_OUT_PORT    GPIOB_BASE
 #define RTC_1HZ_OUT         RTC_1HZ_OUT_PORT, RTC_1HZ_OUT_PIN
+/**@}*/ 
+
+/**
+ * @name GPIOs associated with the TM1637 7 segment driver
+ * 
+ */
+/**@{*/ 
+#define TM1637_CLK_PIN      2
+#define TM1637_CLK_PORT     GPIOC_BASE
+#define GPIO_TM1637_CLK     TM1637_CLK_PORT, TM1637_CLK_PIN
+
+#define TM1637_DAT_PIN      3
+#define TM1637_DAT_PORT     GPIOC_BASE
+#define GPIO_TM1637_DAT     TM1637_DAT_PORT, TM1637_DAT_PIN
 /**@}*/ 
 
 #ifdef __cplusplus
