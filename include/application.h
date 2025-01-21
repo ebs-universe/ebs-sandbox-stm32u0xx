@@ -38,19 +38,20 @@
  * @name Application GPIO Configuration
  */
 /**@{*/   
-    #define APP_ENABLE_GPIO            1
+    #define APP_ENABLE_GPIO             1
 /**@}*/ 
 
 /**
  * @name Application Systick and Time Configuration
- */
+ */ 
 /**@{*/   
-    #define APP_ENABLE_SYSTICK         1
-    #define APP_USE_CORE_SYSTICK       1
-    #define APP_ENABLE_TIME_CRON       1
-    #define APP_ENABLE_TIME_SYNC       1
-    #define APP_ENABLE_RTC             0
-    #define APP_ENABLE_RTC_1HZ_OUT     0
+    #define APP_ENABLE_SYSTICK          1
+    #define APP_USE_CORE_SYSTICK        1
+    #define APP_ENABLE_TIME_CRON        1
+    #define APP_ENABLE_TIME_SYNC        1
+    #define APP_ENABLE_RTC              0
+    #define APP_ENABLE_RTC_1HZ_OUT      0
+    #define APP_ENABLE_QDELAY           1 
 /**@}*/ 
 
 /**
@@ -68,7 +69,7 @@
     #define APP_ENABLE_EEPROM           0
 /**@}*/ 
 
-/**
+/** 
  * @name Application Entropy Configuration
  */
 /**@{*/   
@@ -238,6 +239,19 @@
     #define APP_CRYPTO_IV               ((DLMS_SYSTEM_TITLE << 32) | DLMS_INVOCATION_COUNTER)
     #define APP_CRYPTO_SWAP             CRYPTO_SWAP_NONE
     #define APP_CRYPTO_MODE             CRYPTO_CTX_MODE_ENCRYPTION
+/**@}*/
+
+/**
+ * @name TM1637 Configuration
+ */
+/**@{*/   
+    #define APP_ENABLE_TM1637           1
+    #define TM1637_ENABLE_DISPLAY       1
+    #define TM1637_NUM_DIGITS           4
+    #define TM1637_USE_HFTIMER          0
+
+    #define TM1637_IMPL_BLOCKING        1
+    #define TM1637_IMPL_MAINLOOP        0
 /**@}*/
 
 

@@ -144,10 +144,19 @@ extern "C" {
 #define TM1637_DAT_PIN      3
 #define TM1637_DAT_PORT     GPIOC_BASE
 #define GPIO_TM1637_DAT     TM1637_DAT_PORT, TM1637_DAT_PIN
-/**@}*/ 
+/**@}*/
+
+/**
+ * @name Application Specific GPIOs
+ */
+/**@{*/
+#define DBG_SCOPE1_PIN       10
+#define DBG_SCOPE1_PORT      GPIOC_BASE
+#define GPIO_DBG_SCOPE1      DBG_SCOPE1_PORT, DBG_SCOPE1_PIN
+/**@}*/
 
 #ifdef __cplusplus
-}
+}         
 #endif
 
 #endif

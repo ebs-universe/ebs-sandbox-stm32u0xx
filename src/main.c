@@ -17,6 +17,7 @@
 #include <blink.h>
 
 #include <demos/uart_demo.h>
+#include <demos/qdelay_demo.h>
 
 ucdm_addr_t next_address;
 
@@ -39,6 +40,9 @@ static ucdm_addr_t setup_core(ucdm_addr_t ucdm_address) {
     ucdm_init();
     ucdm_address = tm_init(ucdm_address);
     clock_set_default();
+    #if APP_ENABLE_QDELAY
+        qdelay_init();
+    #endif
     return ucdm_address;
 }
 
@@ -105,6 +109,7 @@ int main(void) {
     ucdm_address = setup_application(ucdm_address);
     
     start_uart_demo();
+    qdelay_demo();
 
     while (1)
     {

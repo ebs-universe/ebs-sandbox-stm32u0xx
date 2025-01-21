@@ -30,9 +30,17 @@ void gpio_init_bcif(void) {
     gpio_conf_periph(GPIO_BCRX, GPIO_AF7_USART2);
 }
 
+static void gpio_init_board_debug(void){
+    gpio_conf_output(GPIO_DBG_SCOPE1);
+    gpio_conf_outmode_pp(GPIO_DBG_SCOPE1);
+    gpio_conf_speed(GPIO_DBG_SCOPE1, GPIO_SPEED_FREQ_MEDIUM);
+    gpio_set_output_low(GPIO_DBG_SCOPE1);
+}
+
 void application_gpio_init (void){
     gpio_init();
     gpio_init_board_leds();
     gpio_init_board_buttons();
     gpio_init_bcif();
+    gpio_init_board_debug();
 }
