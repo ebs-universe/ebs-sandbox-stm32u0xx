@@ -5,6 +5,8 @@
 #include <time/time.h>
 #include <time/cron.h>
 
+#if APP_ENABLE_TM1637
+
 static inline void reverse_block(uint8_t * buffer, uint8_t len) {
     uint8_t i = 0;
     while (i < len / 2) {
@@ -88,3 +90,4 @@ void start_tm1637_demo(void) {
     tm_cron_create_job_abs(&tm1637_demo_job, &tm1637_demo_step, &tm1637_demo_start, &tm1637_demo_period);
 }
 
+#endif

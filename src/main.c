@@ -114,7 +114,7 @@ int main(void) {
     // with tm1637 in the SM+MU tm1637 configuration. This needs 
     // to be debugged in priority.
     start_uart_demo();
-    start_tm1637_demo();
+    // start_tm1637_demo();
 
     while (1)
     {

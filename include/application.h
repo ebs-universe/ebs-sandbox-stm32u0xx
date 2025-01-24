@@ -245,7 +245,7 @@
  * @name TM1637 Configuration
  */
 /**@{*/   
-    #define APP_ENABLE_TM1637           1
+    #define APP_ENABLE_TM1637           0
     #define TM1637_NUM_DIGITS           6
     #define TM1637_SINGLETON            1
     #define TM1637_IMPL_SM              0
