@@ -109,9 +109,11 @@ int main(void) {
     ucdm_address = setup_system(ucdm_address);
     ucdm_address = setup_application(ucdm_address);
     
-    // TODO Enabling both these things causes a serious cron crash 
-    // when LCD output hits 9.2. This needs to be debugged.
-    // start_uart_demo();
+    // TODO Enabling uart_demo and tm1637_demo together causes 
+    // a serious cron crash around when LCD output hits 9.2 
+    // with tm1637 in the SM+MU tm1637 configuration. This needs 
+    // to be debugged in priority.
+    start_uart_demo();
     start_tm1637_demo();
 
     while (1)
