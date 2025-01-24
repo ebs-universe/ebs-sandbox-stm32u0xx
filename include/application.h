@@ -246,13 +246,9 @@
  */
 /**@{*/   
     #define APP_ENABLE_TM1637           1
-    #define TM1637_ENABLE_DISPLAY       1
-    #define TM1637_NUM_DIGITS           4
-    #define TM1637_USE_HFTIMER          0
-
-    #define TM1637_IMPL_BLOCKING        1
-    #define TM1637_IMPL_MAINLOOP        0
+    #define TM1637_NUM_DIGITS           6
+    #define TM1637_SINGLETON            0
+    #define TM1637_IMPL_SM              1
 /**@}*/
-
 
 #endif

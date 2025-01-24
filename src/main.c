@@ -18,6 +18,7 @@
 
 #include <demos/uart_demo.h>
 #include <demos/qdelay_demo.h>
+#include <demos/tm1637_demo.h>
 
 ucdm_addr_t next_address;
 
@@ -108,8 +109,9 @@ int main(void) {
     ucdm_address = setup_system(ucdm_address);
     ucdm_address = setup_application(ucdm_address);
     
-    start_uart_demo();
-    qdelay_demo();
+    // TODO Enabling both these things causes a serious cron crash
+    // start_uart_demo();
+    start_tm1637_demo();
 
     while (1)
     {
@@ -118,6 +120,13 @@ int main(void) {
         #endif
         #if APP_ENABLE_MODBUS
         modbus_state_machine();
+        #endif
+        #if APP_ENABLE_TM1637 && TM1637_IMPL_SM 
+            #if TM1637_SINGLETON 
+            tm1637_state_machine();
+            #else
+            tm1637_state_machine(&tm1637_demo);
+            #endif
         #endif
     }
 }
