@@ -109,7 +109,8 @@ int main(void) {
     ucdm_address = setup_system(ucdm_address);
     ucdm_address = setup_application(ucdm_address);
     
-    // TODO Enabling both these things causes a serious cron crash
+    // TODO Enabling both these things causes a serious cron crash 
+    // when LCD output hits 9.2. This needs to be debugged.
     // start_uart_demo();
     start_tm1637_demo();
 
