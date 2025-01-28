@@ -10,8 +10,6 @@
 
 #include <ucdm/ucdm.h>
 #include "ebs/time_if.h"
-#include <time/time.h>
-#include <time/cron.h>
 #include <modbus/modbus.h>
 
 #include <blink.h>
@@ -107,8 +105,8 @@ ucdm_addr_t setup_application(ucdm_addr_t ucdm_address) {
 int main(void) {
     ucdm_addr_t ucdm_address = 1;
     ucdm_address = setup_system(ucdm_address);
-    ucdm_address = setup_application(ucdm_address);
-    
+    ucdm_address = setup_application(ucdm_address);    
+
     // TODO Enabling uart_demo and tm1637_demo together causes 
     // a serious cron crash around when LCD output hits 9.2 
     // with tm1637 in the SM+MU tm1637 configuration. This needs 

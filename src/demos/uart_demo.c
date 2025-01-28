@@ -4,6 +4,7 @@
 #include <hal/uc.h>
 
 
+int8_t test_value = 0;
 cron_job_t uart_bare_job;
 tm_system_t uart_bare_start;
 tm_sdelta_t uart_bare_period = 100;
@@ -23,8 +24,12 @@ void uart_buffered_send(void) {
     }
 }
 
+void uart_printf_send(void){
+    test_value ++;
+    uart_printf(DEBUG_TRANSPORT_INTFNUM, "|%5d|%10.2f|\n", test_value, (float)test_value / 100);
+}
+
 void start_uart_demo(void) {
-    uart_printf(DEBUG_TRANSPORT_INTFNUM, "UART example %d\n", 12);
     tm_current_time(&uart_bare_start);
-    tm_cron_create_job_abs(&uart_bare_job, &uart_buffered_send, &uart_bare_start, &uart_bare_period);
+    tm_cron_create_job_abs(&uart_bare_job, &uart_printf_send, &uart_bare_start, &uart_bare_period);
 }
